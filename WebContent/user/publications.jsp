@@ -2,6 +2,7 @@
     pageEncoding="ISO-8859-1"%>
     <%@page import="com.admin.adminObjs"%>
     <%@page import="com.journal.Journal"%>  
+    <%@page import="com.books.Books"%>  
     <%@page import="com.user.ConnectionFactory"%>  
     <%@page import="java.sql.*"%>  
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -274,7 +275,7 @@
                                       }
                                       %>
                                       
-                                     
+                                     </td>
     
                                       
                                                                             <%} %>
@@ -306,5 +307,183 @@
   </div>
 
  -->
+
+ 
+ <br><br>
+                        <h3 class="text-center">Book Publications</h3>
+                    
+                        <br>
+                        <table class="table" border='1'>
+                        
+                            <thead>
+                            <th>Sl No.</th>
+                            <th>PCN No.</th>
+                            <th>Name of Authors in the sequence as mentioned in Book</th>
+                            <th>Department</th>
+                            <th>Book Title</th>
+                            <th>Publisher</th>
+                            <th>Scope</th>
+                             <th>Year</th>
+                            <th>Month of Publication</th>
+                            <th>Month of assigning pcn</th>
+                            <th>Page No.</th>
+                            <th>ISBN No.</th>
+                            <th>Hyperlink</th>
+                            <th>Mention if indexed in WOS/Scopus/Google Scholar/Thomson Reuter/Elsevier</th>
+                            <th>Link for Indexing</th>
+                            <th>Download Journal</th>
+                            <th>Download Plagiarism Report</th>
+                            <th>Edit Details</th>
+                            <th>Comments</th>
+                            
+                         
+                            </thead>
+                            <tbody>
+                              <%
+                             
+                            	x=0;
+                            		  for(Books b : adminObjs.getBookById(name)){
+                            		  x++;%>
+                                  <tr>
+                                     <td>
+                                          <%=x%>
+                                                    
+                                      </td>
+                                      
+                                      <td>
+                                          <%if(b.getPcn()==null){
+                                        	  out.print("Not Assigned");
+                                          } else{
+                                        	  out.print(b.getPcn());
+                                          }%>
+                                          
+                                      </td>
+                                      
+                                      <td>
+                                          <%=b.getName()%>
+                                      </td>
+                                      <td>
+                                          <%=b.getDept()%>
+                                      </td>
+                                      <td>
+                                          <%=b.getTitle()%>
+                                      </td>
+                                      <td>
+                                          <%=b.getPublisher()%>
+                                      </td> 
+                                      <td>
+                                          <%=b.getScope()%>
+                                      </td>   
+                                      <td>
+                                          <%=b.getYear()%>
+                                      </td>
+                                      <td>
+                                          <%=b.getMonth_pub()%>
+                                      </td>
+                                      <td>
+                                          <%if(b.getMonth_pcn()==null){
+                                        	  out.print("Not Assigned");
+                                          } else{
+                                        	  out.print(b.getMonth_pcn());
+                                          }%>
+                                      </td>
+                                      <td>
+                                         <%=b.getPages()%>
+                                      </td>
+                                      <td>
+                                          <%=b.getIsbn_no()%>
+                                      </td>
+                                       <td>
+                                          <a href='<%=b.getHyperlink()%>'>Click here</a> 
+                                      </td>
+                                      <td>
+                                          <%=b.getP_index()%>
+                                      </td> 
+                                      <td>
+                                          <%=b.getLink_index()%>
+                                      </td>   
+                                    <td>
+                                          <a href='../DownloadServlet?id=<%=b.getId()%>&type=books'>Download</a>  
+                                      </td>
+                                      
+                                      <td> 
+                                          <a href='../Downloads?id=<%=b.getId()%>&type=books'>Download</a>  
+                                      </td>
+                                    
+ <td>
+                                       
+                                       <%
+                                    
+                                       try{
+                                    	   if(b.getStatus()!=null){
+                                    		   if(b.getPcn() == null ){
+                                    			   if(b.getRevision() < 2 && b.getStatus().equals("rejected")){%>
+                                            	   <a href='../Journal/Edit.jsp?id=<%=b.getId()%>'>Edit</a>  
+                                            	   <%out.print("\n(Publication rejected)"); 
+                                               }
+                                        		   else{
+                                            		   out.print("Can't be edited");
+                                            	   }
+                                    		   }
+                                    		   else{
+                                    			   out.print("Approved publication");
+                                    		   }
+                                    		   
+                                        	
+                                    	   }
+                                    	  
+                                       else{
+                                    	   out.print("Can't be edited");
+                                       }
+                                           
+                                       
+                                      
+                                       }catch(NullPointerException e){
+                                    	   e.printStackTrace();
+                                       }
+                                    
+                                    	  %>
+
+                                      </td> 
+                                      
+
+                                
+                               
+                                  <td><%
+                                  
+                                 if(b.getStatus() != null){
+                                	 
+                                     if(b.getStatus().equals("rejected")){
+                                       	  %>
+
+     <a href='#' data-toggle="modal" data-target="#myModal">Comment</a> 
+
+     
+       <%} else{
+     	  out.print("No comments");
+       }
+                                 }
+                                 else{
+                                	  out.print("No comments");
+                                  }
+                                 
+                                      
+                                      %>
+                                      
+                                     </td>
+    
+                                     </tr>
+                                     
+                                      <%}%>
+                                                                                                     
+                                
+                                 
+                                 
+                                  
+
+                            </tbody>
+
+                        </table>
+              
 </body>
 </html>

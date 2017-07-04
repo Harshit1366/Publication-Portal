@@ -180,6 +180,9 @@ public class pcn extends HttpServlet {
 				ps=connection.prepareStatement("update journal set pcn = ?,status=?,pcn_month=? where id = ?");
 			}
 			else if(type.equals("books")){
+				ps=connection.prepareStatement("update books set pcn = ?,status=?,month_pcn=? where id = ?");
+			}
+		/*	else if(type.equals("books")){
 				ps=connection.prepareStatement("update books set pcn = ?,status=?,pcn_month=? where id = ?");
 			}
 			else if(type.equals("books")){
@@ -193,10 +196,7 @@ public class pcn extends HttpServlet {
 			}
 			else if(type.equals("books")){
 				ps=connection.prepareStatement("update books set pcn = ?,status=?,pcn_month=? where id = ?");
-			}
-			else if(type.equals("books")){
-				ps=connection.prepareStatement("update books set pcn = ?,status=?,pcn_month=? where id = ?");
-			}
+			}*/
 			
 			ps.setString(1, pcn);
 			ps.setString(2, "accepted");
@@ -204,8 +204,30 @@ public class pcn extends HttpServlet {
 			ps.setInt(4, id);
 			ps.executeUpdate();
 
-			response.sendRedirect("Journal/Journal.jsp");
-					
+			
+			if(type.equals("journal")){
+				response.sendRedirect("Journal/Journal.jsp");
+
+			}
+			else if(type.equals("books")){
+				response.sendRedirect("Books/Books.jsp");
+			}
+		/*	else if(type.equals("book_chapter")){
+				pcn=year+dept+'O'+value;
+			}
+			else if(type.equals("conf_proceedings")){
+				pcn=year+dept+'P'+value;
+			}
+			else if(type.equals("conf_presentations")){
+				pcn=year+dept+'C'+value;
+			}
+			else if(type.equals("patents")){
+				pcn=year+dept+'T'+value;
+			}
+			else if(type.equals("tech_reports")){
+				pcn=year+dept+'R'+value;
+			}*/
+								
 		}catch (Exception e) {
 			e.printStackTrace();
 		}

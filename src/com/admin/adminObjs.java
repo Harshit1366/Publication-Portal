@@ -615,5 +615,106 @@ List<Journal> list=new ArrayList<Journal>();
 	}
 	
 	
+	public static List<Books> getBookById(String id){
+		List<Books> list=new ArrayList<Books>();
+		
+		try{
+			connection = ConnectionFactory.getConnection();
+			PreparedStatement ps=connection.prepareStatement("select * from books where username=?");
+			ps.setString(1, id);
+			ResultSet rs=ps.executeQuery();
+			while(rs.next()){
+				Books b=new Books();
+				b.setId(rs.getInt(1));
+				b.setPcn(rs.getString(2));
+				b.setName(rs.getString(3));
+				b.setDept(rs.getString(4));
+				b.setTitle(rs.getString(5));
+				b.setPublisher(rs.getString(6));
+				b.setScope(rs.getString(7));
+				//String y=rs.getString(8);
+				//int year=Integer.valueOf(y);
+				b.setYear(rs.getInt(8));
+				//b.setYear(year);
+				b.setMonth_pub(rs.getString(9));
+				b.setMonth_pcn(rs.getString(10));
+				b.setPages(rs.getString(11));
+				b.setIsbn_no(rs.getString(12));
+				b.setP_index(rs.getString(13));
+				b.setLink_index(rs.getString(14));
+				b.setBook_file(rs.getString(15));
+				b.setPlag_report(rs.getString(16));
+				b.setRevision(rs.getInt(17));
+				b.setStatus(rs.getString(18));
+				b.setComment(rs.getString(20));
+				b.setHyperlink(rs.getString(21));
+				
+				list.add(b);
+			}
+			connection.close();
+		}catch(Exception e){e.printStackTrace();}
+		
+		return list;
+	}
+	
+	
+	
+	public static List<Books> getBooksSearch(String search){
+		
+		List<Books> list=new ArrayList<Books>();
+				
+				try{
+					
+					connection = ConnectionFactory.getConnection();
+					PreparedStatement p1 = connection.prepareStatement("select * from books where authors_name "
+							+ "like ? or authors_name like ? or authors_name like ? or authors_name like ? or pcn like ? or pcn like ? "
+							+ "or pcn like ? or pcn like ? ");
+					p1.setString(1, search+"%");
+					p1.setString(2, "%"+search+"%");
+					p1.setString(3, "%"+search);
+					p1.setString(4, search);
+					p1.setString(5, search+"%");
+					p1.setString(6, "%"+search+"%");
+					p1.setString(7, "%"+search);
+					p1.setString(8, search);
+					ResultSet rs=p1.executeQuery();
+					if(rs.next()){
+						rs.previous();
+					while(rs.next()){
+							Books b=new Books();
+							b.setId(rs.getInt(1));
+							b.setPcn(rs.getString(2));
+							b.setName(rs.getString(3));
+							b.setDept(rs.getString(4));
+							b.setTitle(rs.getString(5));
+							b.setPublisher(rs.getString(6));
+							b.setScope(rs.getString(7));
+							//String y=rs.getString(8);
+							//int year=Integer.valueOf(y);
+							b.setYear(rs.getInt(8));
+							//b.setYear(year);
+							b.setMonth_pub(rs.getString(9));
+							b.setMonth_pcn(rs.getString(10));
+							b.setPages(rs.getString(11));
+							b.setIsbn_no(rs.getString(12));
+							b.setP_index(rs.getString(13));
+							b.setLink_index(rs.getString(14));
+							b.setBook_file(rs.getString(15));
+							b.setPlag_report(rs.getString(16));
+							b.setRevision(rs.getInt(17));
+							b.setStatus(rs.getString(18));
+							b.setComment(rs.getString(20));
+							b.setHyperlink(rs.getString(21));
+							
+							list.add(b);
+						}
+
+					}
+					connection.close();
+				}catch(Exception e){e.printStackTrace();}
+				
+				return list;
+				
+			}
 
 }

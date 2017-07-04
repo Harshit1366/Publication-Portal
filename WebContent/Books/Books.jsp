@@ -150,7 +150,7 @@
                                           }%>
                                       </td>
                                       <td>
-                                          <%=b.getPages()%>
+                                         <%=b.getPages()%>
                                       </td>
                                       <td>
                                           <%=b.getIsbn_no()%>
@@ -214,141 +214,121 @@
                                      
                                         
                                   </tr> 
-                                  <%}
-                              }
+                                  <%}}
+                              
                               else{
                             	 
-                            	  for(Journal j : adminObjs.getSearch(search)){
+                            	  for(Books b : adminObjs.getBooksSearch(search)){
                             		  x++;%>
-                                  <tr>
-                                   <td>
+                                   <tr>
+                                      <td>
                                           <%=x%>
+                                                    
                                       </td>
                                       
-                                       <td>
-                                             <%if(j.getPcn()==null){
-                                        	  %>Not Assigned<%                                           }
-                                          else{
-                                        	  out.print(j.getPcn());
-                                        	  }%>
-                                      </td>
                                       <td>
-                                          <%=j.getName()%>
-                                      </td>
-                                      <td>
-                                          <%=j.getDept()%>
-                                      </td>
-                                      <td>
-                                          <%=j.getTitle()%>
-                                      </td>
-                                      <td>
-                                          <%=j.getJourn()%>
-                                      </td> 
-                                      <td>
-                                          <%=j.getScope()%>
-                                      </td>   
-                                      <td>
-                                          <%=j.getYear()%>
-                                      </td>
-                                      <td>
-                                          <%=j.getMonth_pub()%>
-                                      </td>
-                                      <td>
-                                          <%if(j.getMonth_pcn()==null){
+                                          <%if(b.getPcn()==null){
                                         	  out.print("Not Assigned");
                                           } else{
-                                        	  out.print(j.getMonth_pcn());
+                                        	  out.print(b.getPcn());
+                                          }%>
+                                          
+                                      </td>
+                                      
+                                      <td>
+                                          <%=b.getName()%>
+                                      </td>
+                                      <td>
+                                          <%=b.getDept()%>
+                                      </td>
+                                      <td>
+                                          <%=b.getTitle()%>
+                                      </td>
+                                      <td>
+                                          <%=b.getPublisher()%>
+                                      </td> 
+                                      <td>
+                                          <%=b.getScope()%>
+                                      </td>   
+                                      <td>
+                                          <%=b.getYear()%>
+                                      </td>
+                                      <td>
+                                          <%=b.getMonth_pub()%>
+                                      </td>
+                                      <td>
+                                          <%if(b.getMonth_pcn()==null){
+                                        	  out.print("Not Assigned");
+                                          } else{
+                                        	  out.print(b.getMonth_pcn());
                                           }%>
                                       </td>
                                       <td>
-                                          <%=j.getVol()%>
+                                         <%=b.getPages()%>
+                                      </td>
+                                      <td>
+                                          <%=b.getIsbn_no()%>
+                                      </td>
+                                       <td>
+                                          <a href='<%=b.getHyperlink()%>'>Click here</a> 
+                                      </td>
+                                      <td>
+                                          <%=b.getP_index()%>
                                       </td> 
                                       <td>
-                                          <%=j.getIssue()%>
-                                      </td>   
-                                      <td>
-                                          <%=j.getPages()%>
-                                      </td>
-                                      <td>
-                                          <%=j.getIfs()%>
-                                      </td>
-                                      <td>
-                                          <%=j.getSwif()%>
-                                      </td>
-                                      <td>
-                                          <%=j.getLfif()%>
-                                      </td> 
-                                      <td>
-                                          <%=j.getPay()%>
-                                      </td>   
-                                      <td>
-                                          <%=j.getPdon()%>
-                                      </td>
-                                      <td>
-                                          <%=j.getPw()%>
-                                      </td>
-                                      <td>
-                                          <%=j.getPs()%>
-                                      </td>
-                                      <td>
-                                          <%=j.getPg()%>
-                                      </td> 
-                                      <td>
-                                          <%=j.getPi()%>
+                                          <%=b.getLink_index()%>
                                       </td>   
                                     <td>
-                                          <a href='../DownloadServlet?id=<%=j.getId()%>'>download</a>  
+                                          <a href='../DownloadServlet?id=<%=b.getId()%>&type=books'>Download</a>  
                                       </td>
                                       
-                                        <td> 
-                                          <a href='../DownloadServlet?id=<%=j.getId()%>'>Download</a>  
+                                      <td> 
+                                          <a href='../Downloads?id=<%=b.getId()%>&type=books'>Download</a>  
                                       </td>
-                                     <td>
-                                     
+                                    
+                                      
+                                       <td>
                                        <%
-                                       if(j.getStatus()!=null){
-                                    	   if(j.getStatus().equals("rejected")){
+                                       if(b.getStatus()!=null){
+                                    	   if(b.getStatus().equals("rejected")){
                                            	   out.print("Rejected Application");
                                               }
-                                               else if(j.getStatus().equals("accepted")){
+                                               else if(b.getStatus().equals("accepted")){
                                              	  out.print("Already generated");
-                                               }
+                                               } 
                                        }
-
-                                      
-                                      else{%>
-                                    	   <a href='../pcn?year=<%=j.getYear()%>&dept=<%=j.getDept()%>&id=<%=j.getId() %>' onClick="return confirm('Are you sure you want to generate pcn for this publication?');" >Generate PCN</a>
-                                      <%}
                                        
-                                      
-                                       
+                                       else{%>
+                                    	   <a href='../pcn?year=<%=b.getYear()%>&dept=<%=b.getDept()%>&id=<%=b.getId() %>&type=books' onClick="return confirm('Are you sure you want to generate pcn for this publication?');" >Generate PCN</a>
+                                      <%} 
                                        %>
                                      
                                       </td> 
                                       
                                       <td>  
                                       <%
-                                      if(j.getStatus()!=null){
-                                    	  if(j.getStatus().equals("rejected")){
+                                      if(b.getStatus()!=null){
+                                    	  if(b.getStatus().equals("rejected")){
                                          	   out.print("Rejected Application");
                                             }
-                                   	   else if(j.getStatus().equals("accepted")){
-                                        	  out.print("Already approved");
-                                          }
+                                   	  else if(b.getStatus().equals("accepted")){
+                                       	  out.print("Already approved");
+                                         }
                                       }
                                     	 
                                     	  else{
                                       %>
-                                          <a href='reject.jsp?id=<%=j.getId()%>' onClick="return confirm('Are you sure you want to reject this application ?');">Reject</a> 
+                                          <a href='reject.jsp?id=<%=b.getId()%>&type=books' onClick="return confirm('Are you sure you want to reject this application ?');">Reject</a> 
                                           <% }
                                       
-                                   
+                                      
                                        %> 
                                       </td>
                                       
-                                
+                                     
+                                        
                                   </tr> 
-                             <% } }
+                             <%}}
                               %>
                               
                               
