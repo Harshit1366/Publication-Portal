@@ -69,25 +69,25 @@ public class DownloadServlet extends HttpServlet {
 				p1 = connection.prepareStatement(
 						"select book_file from books where id = ?");
 			}
-			else if(type.equals("books")){
+			else if(type.equals("book_chapter")){
 				p1 = connection.prepareStatement(
-						"select book_file from books where id = ?");
+						"select chap_file from book_chap where id = ?");
 			}
-			else if(type.equals("books")){
+			else if(type.equals("conf_proceedings")){
 				p1 = connection.prepareStatement(
-						"select book_file from books where id = ?");
+						"select pro_file from conf_proceedings where id = ?");
 			}
-			else if(type.equals("books")){
+			else if(type.equals("conf_presentations")){
 				p1 = connection.prepareStatement(
-						"select book_file from books where id = ?");
+						"select pre_file from conf_presentations where id = ?");
 			}
-			else if(type.equals("books")){
+			else if(type.equals("patents")){
 				p1 = connection.prepareStatement(
-						"select book_file from books where id = ?");
+						"select patent_file from patents where id = ?");
 			}
-			else if(type.equals("books")){
+			else if(type.equals("tech_report")){
 				p1 = connection.prepareStatement(
-						"select book_file from books where id = ?");
+						"select tech_report from tech_report where id = ?");
 			}
 			
 			p1.setInt(1, id);

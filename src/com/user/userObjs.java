@@ -10,6 +10,54 @@ import java.sql.Types;
 
 public class userObjs {
 	
+	public static String getComment(int id) {
+	
+	Connection connection = null;
+	String comment = null;
+
+		try {
+			connection = ConnectionFactory.getConnection();
+			PreparedStatement ps = connection.prepareStatement("select comment from journal where id=?");
+			ps.setInt(1, id);
+			ResultSet rs = ps.executeQuery();
+
+			if (rs.next()) {
+				comment = rs.getString(1);
+				
+			}
+		} catch (Exception e) {
+
+		}finally{
+			ConnectionFactory.close(connection);
+		}
+		
+		return comment;
+	
+	}
+	
+	
+	public static String getName(String id) {
+		Connection conn=null;
+		String name=null;
+		try{
+			conn = ConnectionFactory.getConnection();
+			PreparedStatement ps1 = conn.prepareStatement("select name from register where username=?");
+			ps1.setString(1, id);
+			ResultSet rs=ps1.executeQuery();
+			while(rs.next()){
+				name=rs.getString(1);
+			}
+			//return name;
+		}catch(SQLException e){
+			e.printStackTrace();
+		}finally{
+			ConnectionFactory.close(conn);
+		}
+		return name;
+		
+	}
+	
+	
 	public static void setUUID(String id, String uuid) {
 		Connection conn=null;
 		try{
@@ -27,6 +75,142 @@ public class userObjs {
 	}
 	
 	
+	public static String getJUser(int id) {
+		Connection conn=null;
+		String user=null;
+		try{
+			conn = ConnectionFactory.getConnection();
+			PreparedStatement ps1 = conn.prepareStatement("select username from journal where id=?");
+			ps1.setInt(1, id);
+			ResultSet rs=ps1.executeQuery();
+			while(rs.next()){
+				user=rs.getString(1);
+			}
+		}catch(SQLException e){
+			e.printStackTrace();
+		}finally{
+			ConnectionFactory.close(conn);
+		}
+		return user;
+	}
+	
+	
+	public static String getBUser(int id) {
+		Connection conn=null;
+		String user=null;
+		try{
+			conn = ConnectionFactory.getConnection();
+			PreparedStatement ps1 = conn.prepareStatement("select username from books where id=?");
+			ps1.setInt(1, id);
+			ResultSet rs=ps1.executeQuery();
+			while(rs.next()){
+				user=rs.getString(1);
+			}
+		}catch(SQLException e){
+			e.printStackTrace();
+		}finally{
+			ConnectionFactory.close(conn);
+		}
+		return user;
+	}
+	
+	public static String getBCUser(int id) {
+		Connection conn=null;
+		String user=null;
+		try{
+			conn = ConnectionFactory.getConnection();
+			PreparedStatement ps1 = conn.prepareStatement("select username from book_chap where id=?");
+			ps1.setInt(1, id);
+			ResultSet rs=ps1.executeQuery();
+			while(rs.next()){
+				user=rs.getString(1);
+			}
+		}catch(SQLException e){
+			e.printStackTrace();
+		}finally{
+			ConnectionFactory.close(conn);
+		}
+		return user;
+	}
+	
+	public static String getCPOUser(int id) {
+		Connection conn=null;
+		String user=null;
+		try{
+			conn = ConnectionFactory.getConnection();
+			PreparedStatement ps1 = conn.prepareStatement("select username from conf_proceedings where id=?");
+			ps1.setInt(1, id);
+			ResultSet rs=ps1.executeQuery();
+			while(rs.next()){
+				user=rs.getString(1);
+			}
+		}catch(SQLException e){
+			e.printStackTrace();
+		}finally{
+			ConnectionFactory.close(conn);
+		}
+		return user;
+	}
+	
+	public static String getCPEUser(int id) {
+		Connection conn=null;
+		String user=null;
+		try{
+			conn = ConnectionFactory.getConnection();
+			PreparedStatement ps1 = conn.prepareStatement("select username from conf_presentations where id=?");
+			ps1.setInt(1, id);
+			ResultSet rs=ps1.executeQuery();
+			while(rs.next()){
+				user=rs.getString(1);
+			}
+		}catch(SQLException e){
+			e.printStackTrace();
+		}finally{
+			ConnectionFactory.close(conn);
+		}
+		return user;
+	}
+	
+	
+	public static String getPUser(int id) {
+		Connection conn=null;
+		String user=null;
+		try{
+			conn = ConnectionFactory.getConnection();
+			PreparedStatement ps1 = conn.prepareStatement("select username from patents where id=?");
+			ps1.setInt(1, id);
+			ResultSet rs=ps1.executeQuery();
+			while(rs.next()){
+				user=rs.getString(1);
+			}
+		}catch(SQLException e){
+			e.printStackTrace();
+		}finally{
+			ConnectionFactory.close(conn);
+		}
+		return user;
+	}
+	
+	public static String getTRUser(int id) {
+		Connection conn=null;
+		String user=null;
+		try{
+			conn = ConnectionFactory.getConnection();
+			PreparedStatement ps1 = conn.prepareStatement("select username from tech_report where id=?");
+			ps1.setInt(1, id);
+			ResultSet rs=ps1.executeQuery();
+			while(rs.next()){
+				user=rs.getString(1);
+			}
+		}catch(SQLException e){
+			e.printStackTrace();
+		}finally{
+			ConnectionFactory.close(conn);
+		}
+		return user;
+	}
+	
+	
 
 	public static User getUserById(String id){
         if(id == null){
@@ -39,7 +223,7 @@ public class userObjs {
         try{
             connection = ConnectionFactory.getConnection();
             PreparedStatement ps = connection.prepareStatement("select name,designation,email_id,"
-            		+ "contact_no,dob,username,password from login where username=?");
+            		+ "contact_no,dob from register where username=?");
             ps.setString(1, id);
             rs = ps.executeQuery();
             if(rs.next()){
@@ -48,8 +232,8 @@ public class userObjs {
 				u.setEmail(rs.getString(3));
 				u.setContact(rs.getLong(4));
 				u.setDob(rs.getString(5));
-				u.setUsername(rs.getString(6));
-				u.setPassword(rs.getString(7));
+			//	u.setUsername(rs.getString(6));
+			//	u.setPassword(rs.getString(7));
                 connection.close();
                 return u;
                 

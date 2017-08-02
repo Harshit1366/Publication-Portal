@@ -27,6 +27,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FilenameUtils;
 
 import com.user.ConnectionFactory;
+import com.user.userObjs;
 
 /**
  * Servlet implementation class uploadJournal
@@ -69,10 +70,11 @@ public class uploadBooks extends HttpServlet {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		PreparedStatement ps1 = null;
+		PreparedStatement ps1 = null,ps2=null;
 		try {
 			ps1 = conn.prepareStatement("insert into books(authors_name,dept,book_title,publisher,scope,year,month_pub,pages,isbn_no,hyperlink,pwsgte,link_index,book_file,plag_report,username) "
 					+ "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+			ps2 = conn.prepareStatement("insert into notify(notification,user_id) values(?,?)");
 		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -152,13 +154,24 @@ public class uploadBooks extends HttpServlet {
             }
 			
             ps1.setString(15, name);
+            
+            String n = userObjs.getName(name);
+            ps2.setString(1, "A Book Chapter is uploaded by "+n);
+            ps2.setString(2, "admin");
 			
 		
 		
 			
 			try{
 				//System.out.println(ps1);
-				System.out.println(ps1.executeUpdate());
+				if(ps1.executeUpdate()>0){
+					ps2.executeUpdate();
+				
+				out.println("<script type=\"text/javascript\">");
+				out.println("alert('BOOK UPLOADED SUCESSFULLY !');");
+				out.println("location='user/select.jsp';");
+				out.println("</script>");
+				}
 				response.sendRedirect("user/select.jsp");
 	
 			}catch(SQLException e){

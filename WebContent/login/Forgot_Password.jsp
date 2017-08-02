@@ -15,6 +15,11 @@ margin-left : 37.5%;
 margin-right : 37.5%;
 width : 25%;
 }
+body{
+background-image : url("../images/ncu.jpg");
+background-repeat: no-repeat;
+background-size : 1366px 1000px;
+}
 input{
 text-align:center;
 }
@@ -37,7 +42,7 @@ text-align:center;
   <div class="bton"> <br> 
   <button type="submit" class="btn btn-primary btn-lg">GO</button>  
 </div><br><br><center>
-                        <div class="forgot"><a href="login.jsp">Go to login page</a></div>
+                        <div class="forgot"><a href="../login.jsp">Go to login page</a></div>
                   </center>  </form>
                   </div>
                   

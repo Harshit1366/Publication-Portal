@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+    <%@page import="com.notify.notification"%>
+<%@page import="com.notify.notifObjs"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -10,12 +12,49 @@
         <title>Change Password</title>
 </head>
 <style>
+li{
+ font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+    font-size: 16px;
+    font-weight : bold;
+
+}
+ul.dropdown-menu{
+width: 400px;
+    height: 340px;
+    overflow: scroll;
+
+}
+
+li.a{
+font-family: Verdana;
+margin-left : 10px;
+font-size : 13px;
+font-weight : normal;
+color : blue;
+/*font-style: italic;*/
+}
+
+li.dropdown-header{
+font-family: Arial;
+}
+
+
+span.label{
+ border-radius : 15px;
+ padding: 5px 10px;
+
+}
 h1{
-margin-left : 3%;
+text-align : center;
+}
+body{
+background-image : url("../images/ncu.jpg");
+background-repeat: no-repeat;
+background-size : 1600px 1100px;
 }
 form{
-margin-left : 8%;
-width : 40%;
+margin-left : 39%;
+width : 25%;
 }
 input{
 text-align:center;
@@ -25,7 +64,10 @@ text-align:center;
 }
 </style>
 <body data-spy="scroll" data-target=".navbar" data-offset="50">
-
+<%  if(request.getSession().getAttribute("s_id")==null){
+            response.sendRedirect("../login.jsp");
+            return;
+        }%>
 <nav class="navbar navbar-inverse navbar-fixed-top">  
   <div class="container-fluid">  
     <div class="navbar-header">  
@@ -50,7 +92,34 @@ text-align:center;
           <li><a href="publications.jsp">PUBLICATIONS</a></li>  
           <li><a href="select.jsp">UPLOAD PUBLLICATION DETAILS</a></li>  
         </ul>  
-			<ul class="nav navbar-nav navbar-right">  
+			<ul class="nav navbar-nav navbar-right"> 
+			<li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+     <%if(notifObjs.count_notif(name) > 0){
+        	%> <span class="label label-danger"><%=notifObjs.count_notif(name) %></span><%
+        }else{
+       } %>
+           NOTIFICATIONS <span class="glyphicon glyphicon-bell"></span></a>
+         
+        <ul class="dropdown-menu">
+        <% 
+        for(notification n : notifObjs.getNotif(name)){
+        	
+        %>
+        
+     <li class="dropdown-header">  <%=n.getDiff() %> </li>
+          <li class='a'><%=n.getNotification() %></li>
+         
+            <li class="dropdown-header">
+        
+      
+         <a href='../Delnote?id=<%=n.getId() %>&type=user'><p align='right'> <span class="glyphicon glyphicon-trash"> </span></p></a>
+       </li>
+          
+           <li class="divider"></li>
+          <%} %>
+        </ul>
+      </li>   
 			 <li><a href="Edit_Profile.jsp"> Edit Profile</a></li>
       <li><a href="Change_Password.jsp"> Change Password</a></li>  
       <li><a href="../logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>  
@@ -69,17 +138,18 @@ text-align:center;
            <form style="width:300px" method="POST" action="../change_password">  
 <div class="form-group">  
     <label for="name">Old Password </label>  
-    <br><input type="password" class="form-control" name="op" required="required">  
+    <br><input type="password" class="form-control" name="op" placeholder="Enter your old password" required="required">  
     <br>
   </div> 
  <div class="form-group">  
     <label for="desg">New Password </label>  
-    <br><input type="password" class="form-control" name="np" required="required">  <br>
+    <br><input type="password" class="form-control" name="np" placeholder="Enter your new password" required="required">  <br>
   </div> 
  <div class="form-group">  
     <label for="InputEmail">Confirm New Password </label>  
-    <br><input type="password" class="form-control" name="cnp" required="required"> <br> 
+    <br><input type="password" class="form-control" name="cnp" placeholder="Confirm your new password" required="required"> <br> 
   </div>  
+  <input type='hidden' name='role' value='user'>
   <div class="bton"> <br> 
   <button type="submit" class="btn btn-primary btn-lg">Change Password</button>  
   <br><br>

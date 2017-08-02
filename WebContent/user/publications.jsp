@@ -1,20 +1,119 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-    <%@page import="com.admin.adminObjs"%>
-    <%@page import="com.journal.Journal"%>  
-    <%@page import="com.books.Books"%>  
+    <%@page import="com.notify.notification"%>
+<%@page import="com.notify.notifObjs"%>
     <%@page import="com.user.ConnectionFactory"%>  
     <%@page import="java.sql.*"%>  
+    <%@page import="com.admin.adminJObjs"%>
+    <%@page import="com.admin.adminBObjs"%>
+    <%@page import="com.admin.adminBCObjs"%>
+    <%@page import="com.admin.adminCProObjs"%>
+    <%@page import="com.admin.adminCPreObjs"%>
+    <%@page import="com.admin.adminPObjs"%>
+    <%@page import="com.admin.adminTRObjs"%>
+    <%@page import="com.journal.Journal"%> 
+      <%@page import="com.books.Books"%> 
+      <%@page import="com.book_chap.Book_chapter"%>
+      <%@page import="com.conf_presentations.conf_presentations"%>
+      <%@page import="com.conf_proceedings.conf_proceedings"%>
+      <%@page import="com.patents.Patents"%>
+      <%@page import="com.tech_reports.tech_reports"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">  
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>  
-  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>  
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script> 
+  <style>
+  li{
+ font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+    font-size: 16px;
+    font-weight : bold;
+
+}
+
+ body{
+  background-color:lightblue;
+  }
+  
+  /* Full-width input fields */
+input[type=text]{
+   /* width: 100%;*/
+   /* padding: 12px 20px;*/
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius : 6.5px;
+    box-sizing: border-box;
+}
+
+/* Set a style for all buttons */
+input[type=submit] {
+    background-color:#2695DF;
+    color: white;
+    padding: 6px 12px;
+    margin: 8px 0;
+    border: none;
+    border-radius : 8px;
+    cursor: pointer;
+    
+}
+td{
+font-family : "Comic Sans MS", cursive, sans-serif;
+ font-size: 14px;
+
+}
+
+
+th{
+font-family: Lucida Console;
+font-size: 15px;
+background : #2695DF;
+color : white;
+}
+/*body{
+background-image : url("../images/ncu.jpg");
+background-repeat: no-repeat;
+background-size : 1366px 720px;
+}*/
+
+
+ul.dropdown-menu{
+width: 400px;
+    height: 340px;
+    overflow: scroll;
+
+}
+
+li.a{
+font-family: Verdana;
+margin-left : 10px;
+font-size : 13px;
+font-weight : normal;
+color : blue;
+/*font-style: italic;*/
+}
+
+li.dropdown-header{
+font-family: Arial;
+}
+
+
+span.label{
+ border-radius : 15px;
+ padding: 5px 10px;
+
+}
+  
+  </style> 
 <title>Publications</title>
 </head>
 <body data-spy="scroll" data-target=".navbar" data-offset="50">
+<%  if(request.getSession().getAttribute("s_id")==null){
+            response.sendRedirect("../login.jsp");
+            return;
+        }%>
 <nav class="navbar navbar-inverse navbar-fixed-top">  
   <div class="container-fluid">  
     <div class="navbar-header">  
@@ -24,7 +123,7 @@
           <span class="icon-bar"></span>                          
       </button>  
       <a class="navbar-brand" href="user_dashboard.jsp"><%
-              String name = null,comment=null;
+              String name = null;//,comment=null;
               HttpSession sess=request.getSession(false);  
               if(sess!=null){  
               name=(String)sess.getAttribute("name");  
@@ -39,24 +138,83 @@
           <li><a href="publications.jsp">PUBLICATIONS</a></li>  
           <li><a href="select.jsp">UPLOAD PUBLICATION DETAILS</a></li>  
         </ul>  
-			<ul class="nav navbar-nav navbar-right">  
+			<ul class="nav navbar-nav navbar-right">
+			<li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+     <%if(notifObjs.count_notif(name) > 0){
+        	%> <span class="label label-danger"><%=notifObjs.count_notif(name) %></span><%
+        }else{
+       } %>
+           NOTIFICATIONS <span class="glyphicon glyphicon-bell"></span></a>
+         
+        <ul class="dropdown-menu">
+        <% 
+        for(notification n : notifObjs.getNotif(name)){
+        	
+        %>
+        
+     <li class="dropdown-header">  <%=n.getDiff() %> </li>
+          <li class='a'><%=n.getNotification() %></li>
+         
+            <li class="dropdown-header">
+        
+      
+         <a href='../Delnote?id=<%=n.getId() %>&type=user'><p align='right'> <span class="glyphicon glyphicon-trash"> </span></p></a>
+       </li>
+          
+           <li class="divider"></li>
+          <%} %>
+        </ul>
+      </li>  
       <li><a href="../logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>  
     </ul>  
+          
+      </div> 
+      
+        <div class="collapse navbar-collapse" id="myNavbar">  
+        <ul class="nav navbar-nav">  
+        <li><a href="journal.jsp">JOURNAL</a></li>  
+          <li><a href="books.jsp">BOOKS</a></li>  
+          <li><a href="book_chapter.jsp">BOOK CHAPTER</a></li>  
+          <li><a href="conf_proceedings.jsp">CONFERENCE PROCEEDINGS</a></li>  
+          <li><a href="conf_presentations.jsp">CONFERENCE PRESENTATIONS</a></li>  
+          <li><a href="patent.jsp">PATENTS</a></li>  
+          <li><a href="tech_report.jsp">TECH REPORT</a></li>
+        </ul>  
           
       </div>  
     </div>  
   </div>  
 </nav>   
- <br><br><br>
-                        <h3 class="text-center">Journal Publications</h3>
-                    
-                        <br>
-                        <table class="table" border='1'>
+ <br><br><br> <br><br><br>
+ 
+                      <%String search=request.getParameter("search");
+                    int x=0;
+                        %>
+                        <form method="post" action="#">
+                        <p>&nbsp&nbspSearch : 
+                        <%if(search == null){
+                        	%><input type="text" name="search" size= '31' placeholder="Type author's name">
+                       <%  }
+                       else{
+                       %><input type="text" name="search" value=<%=search %>><%} %>
                         
+                        
+                        <input type="SUBMIT" value="SEARCH"></p></form>
+                        
+                        <br>
+                        
+                           <table class="table table-hover table-bordered">
+                            <%
+                            if(search!=null){
+                            
+                            for(Journal j : adminJObjs.getSearch3(search)){
+                      		  x++; %>
                             <thead>
                             <th>Sl No.</th>
+                            <th>Type</th>
                             <th>PCN No.</th>
-                            <th>Name of Authors</th>
+                            <th>Name of Authors as in Journal</th>
                             <th>Department</th>
                             <th>Title</th>
                             <th>Journal</th>
@@ -66,7 +224,8 @@
                             <th>Month of assigning pcn</th>
                             <th>Volume</th>
                             <th>Issue</th>
-                             <th>Pages</th>
+                            <th>Page No.</th>
+                            <th>DOI No.</th>
                             <th>Impact Factor</th>
                             <th>Specify which Impact Factor</th>
                             <th>Link for Impact Factor</th>
@@ -76,33 +235,27 @@
                             <th>Publication reported in Scopus</th>
                             <th>Publication reported in Google Scholar</th>
                             <th>Publication reported in Indian Citation Index</th>
-                            <th>Download Journal</th>
-                            <th>Download Plagorism Report</th>
-                            <th>Edit Details</th>
-                            <th>Comments</th>
-                            
                          
                             </thead>
                             <tbody>
-                              <%
-                             
-                            	int x=0;
-                            		  for(Journal j : adminObjs.getUserById(name)){
-                            		  x++;%>
+                            
+                            
                                   <tr>
-                                      <td>
+                                   <td>
                                           <%=x%>
                                       </td>
                                       
-                                      <td>
-                                          <%if(j.getPcn()==null){
-                                        	  out.print("Not Assigned");
-                                          } else{
-                                        	  out.print(j.getPcn());
-                                          }%>
-                                          
+                                       <td>
+                                          JOURNAL
                                       </td>
                                       
+                                       <td>
+                                             <%if(j.getPcn()==null){
+                                        	  %>Not Assigned<%
+                            	              }else{
+                                        	  out.print(j.getPcn());
+                                        	  }%>
+                                      </td>
                                       <td>
                                           <%=j.getName()%>
                                       </td>
@@ -125,7 +278,7 @@
                                           <%=j.getMonth_pub()%>
                                       </td>
                                       <td>
-                                         <%if(j.getMonth_pcn()==null){
+                                          <%if(j.getMonth_pcn()==null){
                                         	  out.print("Not Assigned");
                                           } else{
                                         	  out.print(j.getMonth_pcn());
@@ -140,6 +293,13 @@
                                       <td>
                                           <%=j.getPages()%>
                                       </td>
+                                        <td>
+                                          <%if(j.getDoi()==null || j.getDoi().equals("NA") || j.getDoi().equals("na")){
+				out.print("No Link");
+				}else{ %>
+				<a href='<%=j.getDoi()%>'>Click here</a>
+				<%} %>
+                                      </td>
                                       <td>
                                           <%=j.getIfs()%>
                                       </td>
@@ -147,7 +307,11 @@
                                           <%=j.getSwif()%>
                                       </td>
                                       <td>
-                                          <%=j.getLfif()%>
+                                         <%if(j.getLfif()==null || j.getLfif().equals("NA") || j.getLfif().equals("na")){
+				out.print("No Link");
+				}else{ %>
+				<a href='<%=j.getLfif()%>'>Click here</a>
+				<%} %>
                                       </td> 
                                       <td>
                                           <%=j.getPay()%>
@@ -167,158 +331,22 @@
                                       <td>
                                           <%=j.getPi()%>
                                       </td>   
-                                    <td>
-                                          <a href='../DownloadServlet?id=<%=j.getId()%>'>Download</a>  
-                                      </td>
-                                      
-                                      <td> 
-                                          <a href='../Downloads?id=<%=j.getId()%>'>Download</a>  
-                                      </td>
                                     
-                                      
-                                       <td>
-                                       
-                                       <%
-                                      // out.print(j.getPcn()+" "+j.getRevision()+" "+j.getStatus());
-                                       try{
-                                    	   if(j.getStatus()!=null){
-                                    		   if(j.getPcn() == null ){
-                                    			   if(j.getRevision() < 2 && j.getStatus().equals("rejected")){%>
-                                            	   <a href='../Journal/Edit.jsp?id=<%=j.getId()%>'>Edit</a>  
-                                            	   <%out.print("\n(Publication rejected)"); 
-                                               }
-                                        		   else{
-                                            		   out.print("Can't be edited");
-                                            	   }
-                                    		   }
-                                    		   else{
-                                    			   out.print("Approved publication");
-                                    		   }
-                                    		   
-                                        	  // if(j.getPcn() != null && j.getRevision() <=2 && j.getStatus().equals("accepeted")){
-                                            	//   out.print("Approved publication");
-                                               //}
-                                        	  
-                                    	   }
-                                    	  
-                                       else{
-                                    	   out.print("Can't be edited");
-                                       }
-                                           
-                                       
-                                      
-                                       }catch(NullPointerException e){
-                                    	   e.printStackTrace();
-                                       }
-                                       
-                                       // else if(j.getStatus().equals("rejected") && j.getPcn() == null && j.getRevision() < 2 ){
-                                   	//   out.print("Publication rejected");
-                                      //}else if(j.getStatus().equals("accepeted") && j.getPcn() == null && j.getRevision() < 2 ){
-                                   	 //  out.print("Approved publication");
-                                      //}
-                                       //else if(j.getStatus().equals("rejected")){
-                                         //     out.print("\n(Publication rejected)");
-                                           //}else if(j.getStatus().equals("accepted")){
-                                         	 // out.print("Approved publication");
-                                           //}
-                                           //if(j.getRevision() >= 2){
-                                        	 //  out.print("Can't be edited");
-                                           //}
-                                       
-
-                                    	  %>
-
-                                      </td> 
-                                      
-
+                                    
+                                    
                                 
-                               
-                                  <td><%if(j.getStatus().equals("rejected")){
-                                    	  %>
-<%//out.print(j.getComment()); %>
-  <a href='#' data-toggle="modal" data-target="#myModal">Comment</a> 
-  
-   <%/*     
-        String id1=(String)sess.getAttribute("id");  
-        		 if(id1!=null){
-        			 int id=Integer.valueOf(id1);
-        			 out.print(id);
-        		  
-        		  
-        		  Connection connection=null;
-
-        		  try{
-        		  	connection = ConnectionFactory.getConnection();
-        		  	PreparedStatement ps=connection.prepareStatement("select comment from journal where id=?");
-        		  	ps.setInt(1, id);
-        		  	ResultSet rs=ps.executeQuery();
-        		  	
-        		  	
-        		  	if(rs.next()){
-        		  		comment=rs.getString(1);
-        		  		out.print(comment);
-        		  	}
-        		  }catch(Exception e){
-        		  	
-        		  }
-        */
-        		  
-        		  %> 
-        		  
-        		   
-
-<%//} %>
-  
-    <%} 
-                                      else{
-                                    	  out.print("No comments");
-                                      }
-                                      %>
-                                      
-                                     </td>
-    
-                                      
-                                                                            <%} %>
-                              
-                                 </tr> 
-
+                                   </tr> 
+                          
                             </tbody>
-
-                        </table>
-                        
-                        <%//String com=request.getParameter(comment); %>
-<!--   <div class="modal fade" id="myModal" role="dialog">             
-   <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Reason for rejection of publication by Admin</h4>
-        </div>
-        <div class="modal-body">
-          <p><%//out.print(com); %></p>
-
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
-      </div>
-      
-    </div>
-  </div>
-
- -->
-
- 
- <br><br>
-                        <h3 class="text-center">Book Publications</h3>
-                    
-                        <br>
-                        <table class="table" border='1'>
-                        
-                            <thead>
+                            
+                            <% }
+                            for(Books b : adminBObjs.getBooksSearch2(search)){
+                      		  x++;%>
+                      		  <thead>
                             <th>Sl No.</th>
+                            <th>Type</th>
                             <th>PCN No.</th>
-                            <th>Name of Authors in the sequence as mentioned in Book</th>
+                            <th>Name of Authors as in Book</th>
                             <th>Department</th>
                             <th>Book Title</th>
                             <th>Publisher</th>
@@ -331,159 +359,567 @@
                             <th>Hyperlink</th>
                             <th>Mention if indexed in WOS/Scopus/Google Scholar/Thomson Reuter/Elsevier</th>
                             <th>Link for Indexing</th>
-                            <th>Download Journal</th>
-                            <th>Download Plagiarism Report</th>
-                            <th>Edit Details</th>
-                            <th>Comments</th>
                             
-                         
+
+                            
                             </thead>
-                            <tbody>
-                              <%
-                             
-                            	x=0;
-                            		  for(Books b : adminObjs.getBookById(name)){
-                            		  x++;%>
-                                  <tr>
-                                     <td>
-                                          <%=x%>
-                                                    
-                                      </td>
-                                      
-                                      <td>
-                                          <%if(b.getPcn()==null){
-                                        	  out.print("Not Assigned");
-                                          } else{
-                                        	  out.print(b.getPcn());
-                                          }%>
-                                          
-                                      </td>
-                                      
-                                      <td>
-                                          <%=b.getName()%>
-                                      </td>
-                                      <td>
-                                          <%=b.getDept()%>
-                                      </td>
-                                      <td>
-                                          <%=b.getTitle()%>
-                                      </td>
-                                      <td>
-                                          <%=b.getPublisher()%>
-                                      </td> 
-                                      <td>
-                                          <%=b.getScope()%>
-                                      </td>   
-                                      <td>
-                                          <%=b.getYear()%>
-                                      </td>
-                                      <td>
-                                          <%=b.getMonth_pub()%>
-                                      </td>
-                                      <td>
-                                          <%if(b.getMonth_pcn()==null){
-                                        	  out.print("Not Assigned");
-                                          } else{
-                                        	  out.print(b.getMonth_pcn());
-                                          }%>
-                                      </td>
-                                      <td>
-                                         <%=b.getPages()%>
-                                      </td>
-                                      <td>
-                                          <%=b.getIsbn_no()%>
-                                      </td>
-                                       <td>
-                                          <a href='<%=b.getHyperlink()%>'>Click here</a> 
+                              <tr>
+                                 <td>
+                                     <%=x%>
+                                               
+                                 </td>
+                                 
+                                 <td>
+                                    BOOKS
+                                              
+                                </td>
+                                 
+                                 <td>
+                                     <%if(b.getPcn()==null){
+                                   	  out.print("Not Assigned");
+                                     } else{
+                                   	  out.print(b.getPcn());
+                                     }%>
+                                     
+                                 </td>
+                                 
+                                 <td>
+                                     <%=b.getName()%>
+                                 </td>
+                                 <td>
+                                     <%=b.getDept()%>
+                                 </td>
+                                 <td>
+                                     <%=b.getTitle()%>
+                                 </td>
+                                 <td>
+                                     <%=b.getPublisher()%>
+                                 </td> 
+                                 <td>
+                                     <%=b.getScope()%>
+                                 </td>   
+                                 <td>
+                                     <%=b.getYear()%>
+                                 </td>
+                                 <td>
+                                     <%=b.getMonth_pub()%>
+                                 </td>
+                                 <td>
+                                     <%if(b.getMonth_pcn()==null){
+                                   	  out.print("Not Assigned");
+                                     } else{
+                                   	  out.print(b.getMonth_pcn());
+                                     }%>
+                                 </td>
+                                 <td>
+                                    <%=b.getPages()%>
+                                 </td>
+                                 <td>
+                                     <%=b.getIsbn_no()%>
+                                 </td>
+                                  <td>
+                                          <%if(b.getHyperlink()==null || b.getHyperlink().equals("NA") || b.getHyperlink().equals("na")){
+				                        out.print("No Link");
+				                        }else{ %>
+				                        <a href='<%=b.getHyperlink()%>'>Click here</a>
+				                         <%} %>
                                       </td>
                                       <td>
                                           <%=b.getP_index()%>
                                       </td> 
                                       <td>
-                                          <%=b.getLink_index()%>
+                                          <%if(b.getLink_index()==null || b.getLink_index().equals("NA") || b.getLink_index().equals("na")){
+				                       out.print("No Link");
+				                       }else{ %>
+				                       <a href='<%=b.getLink_index()%>'>Click here</a>
+				                       <%} %>
                                       </td>   
-                                    <td>
-                                          <a href='../DownloadServlet?id=<%=b.getId()%>&type=books'>Download</a>  
-                                      </td>
-                                      
-                                      <td> 
-                                          <a href='../Downloads?id=<%=b.getId()%>&type=books'>Download</a>  
-                                      </td>
-                                    
- <td>
-                                       
-                                       <%
-                                    
-                                       try{
-                                    	   if(b.getStatus()!=null){
-                                    		   if(b.getPcn() == null ){
-                                    			   if(b.getRevision() < 2 && b.getStatus().equals("rejected")){%>
-                                            	   <a href='../Journal/Edit.jsp?id=<%=b.getId()%>'>Edit</a>  
-                                            	   <%out.print("\n(Publication rejected)"); 
-                                               }
-                                        		   else{
-                                            		   out.print("Can't be edited");
-                                            	   }
-                                    		   }
-                                    		   else{
-                                    			   out.print("Approved publication");
-                                    		   }
-                                    		   
-                                        	
-                                    	   }
-                                    	  
-                                       else{
-                                    	   out.print("Can't be edited");
-                                       }
-                                           
-                                       
-                                      
-                                       }catch(NullPointerException e){
-                                    	   e.printStackTrace();
-                                       }
-                                    
-                                    	  %>
+                             
 
+                                 
+                                
+                                   
+                             </tr> 
+                        <%}
+                            for(Book_chapter b : adminBCObjs.getBook_chapSearch2(search)){
+                      		  x++;%>
+                      		   <thead>
+                            <th>Sl No.</th>
+                            <th>Type</th>
+                            <th>PCN No.</th>
+                            <th>Name of Authors as in Book Chapter</th>
+                            <th>Department</th>
+                            <th>Chapter Number</th>
+                            <th>Chapter Title</th>
+                            <th>Book Title</th>
+                            <th>Publisher</th>
+                            <th>Scope</th>
+                             <th>Year</th>
+                            <th>Month of Publication</th>
+                            <th>Month of assigning pcn</th>
+                            <th>Page No.</th>
+                            <th>Book ISBN No.</th>
+                            <th>Hyperlink</th>
+                            <th>Mention if indexed in WOS/Scopus/Google Scholar/Thomson Reuter/Elsevier</th>
+                            <th>Link for Indexing</th>
+                           
+                             <tr>
+                                <td>
+                                    <%=x%>
+                                              
+                                </td>
+                                
+                                <td>
+                                    BOOK CHAPTER
+                                              
+                                </td>
+                                
+                                <td>
+                                    <%if(b.getPcn()==null){
+                                  	  out.print("Not Assigned");
+                                    } else{
+                                  	  out.print(b.getPcn());
+                                    }%>
+                                    
+                                </td>
+                                
+                                <td>
+                                    <%=b.getName()%>
+                                </td>
+                                <td>
+                                    <%=b.getDept()%>
+                                </td>
+                                <td>
+                                    <%=b.getChap_no()%>
+                                </td>
+                                <td>
+                                    <%=b.getChap_title()%>
+                                </td>
+                                <td>
+                                    <%=b.getBook_title()%>
+                                </td>
+                                <td>
+                                    <%=b.getPublisher()%>
+                                </td> 
+                                <td>
+                                    <%=b.getScope()%>
+                                </td>   
+                                <td>
+                                    <%=b.getYear()%>
+                                </td>
+                                <td>
+                                    <%=b.getMonth_pub()%>
+                                </td>
+                                <td>
+                                    <%if(b.getMonth_pcn()==null){
+                                  	  out.print("Not Assigned");
+                                    } else{
+                                  	  out.print(b.getMonth_pcn());
+                                    }%>
+                                </td>
+                                <td>
+                                   <%=b.getPages()%>
+                                </td>
+                                <td>
+                                    <%=b.getBook_isbn_no()%>
+                                </td>
+                               <td>
+                                          <%if(b.getHyperlink()==null || b.getHyperlink().equals("NA") || b.getHyperlink().equals("na")){
+				                        out.print("No Link");
+				                        }else{ %>
+				                        <a href='<%=b.getHyperlink()%>'>Click here</a>
+				                         <%} %>
+                                      </td>
+                                      <td>
+                                          <%=b.getP_index()%>
                                       </td> 
-                                      
+                                      <td>
+                                        <%if(b.getLink_index()==null || b.getLink_index().equals("NA") || b.getLink_index().equals("na")){
+				                       out.print("No Link");
+				                       }else{ %>
+				                       <a href='<%=b.getLink_index()%>'>Click here</a>
+				                       <%} %>
+                                      </td>     
+                          
+                              
 
                                 
                                
-                                  <td><%
                                   
-                                 if(b.getStatus() != null){
-                                	 
-                                     if(b.getStatus().equals("rejected")){
-                                       	  %>
+                            </tr> 
+                       <%}
+                            for(conf_proceedings c : adminCProObjs.getC_ProSearch2(search)){
+                      		  x++;%>
+                      		  <thead>
+                            <th>Sl No.</th>
+                            <th>Type</th>
+                            <th>PCN No.</th>
+                            <th>Name of Authors as in Conference Proceedings</th>
+                            <th>Department</th>
+                            <th>Title of Paper</th>
+                            <th>Proceedings of</th>
+                            <th>Scope</th>
+                            <th>Venue Details for Conference </th>
+                            <th>Year</th>
+                            <th>Month of Publication</th>
+                            <th>Month of assigning pcn</th>
+                            <th>Dates</th>
+                            <th>Publishers</th>
+                            <th>Page No.</th>
+                            <th>Hyperlink</th>
+                            <th>Mention if indexed in WOS/Scopus/Google Scholar/Thomson Reuter/Elsevier</th>
+                            <th>Link for Indexing</th>
+                       
 
-     <a href='#' data-toggle="modal" data-target="#myModal">Comment</a> 
+                     
+                         
+                            </thead>
+                         
+                            <tr>
+                                <td>
+                                    <%=x%>
+                                              
+                                </td>
+                                
+                                <td>
+                                    CONF. PROCEEDINGS
+                                              
+                                </td>
+                                
+                                <td>
+                                    <%if(c.getPcn()==null){
+                                  	  out.print("Not Assigned");
+                                    } else{
+                                  	  out.print(c.getPcn());
+                                    }%>
+                                    
+                                </td>
+                                
+                                <td>
+                                    <%=c.getName()%>
+                                </td>
+                                <td>
+                                    <%=c.getDept()%>
+                                </td>
+                                <td>
+                                    <%=c.getTitle()%>
+                                </td>
+                                <td>
+                                    <%=c.getProceedings()%>
+                                </td> 
+                                <td>
+                                    <%=c.getScope()%>
+                                </td>   
+                                <td>
+                                    <%=c.getVenue()%>
+                                </td>
+                                <td>
+                                    <%=c.getYear()%>
+                                </td>
+                                <td>
+                                    <%=c.getMonth_pub()%>
+                                </td>
+                                <td>
+                                    <%if(c.getMonth_pcn()==null){
+                                  	  out.print("Not Assigned");
+                                    } else{
+                                  	  out.print(c.getMonth_pcn());
+                                    }%>
+                                </td>
+                                <td>
+                                    <%=c.getDates()%>
+                                </td> 
+                                <td>
+                                    <%=c.getPublishers()%>
+                                </td>   
+                                <td>
+                                    <%=c.getPages()%>
+                                </td>
+                                <td>
+                                         <%if(c.getHyperlink()==null || c.getHyperlink().equals("NA") || c.getHyperlink().equals("na")){
+				                        out.print("No Link");
+				                        }else{ %>
+				                        <a href='<%=c.getHyperlink()%>'>Click here</a>
+				                         <%} %>
+                                      </td>
+                                      <td>
+                                          <%=c.getP_index()%>
+                                      </td>
+                                      <td>
+                                          <%if(c.getLink_index()==null || c.getLink_index().equals("NA") || c.getLink_index().equals("na")){
+				                       out.print("No Link");
+				                       }else{ %>
+				                       <a href='<%=c.getLink_index()%>'>Click here</a>
+				                       <%} %>
 
-     
-       <%} else{
-     	  out.print("No comments");
-       }
-                                 }
-                                 else{
-                                	  out.print("No comments");
-                                  }
-                                 
-                                      
-                                      %>
-                                      
-                                     </td>
-    
-                                     </tr>
-                                     
-                                      <%}%>
-                                                                                                     
+                                      </td>
+                            
+                                
+                         
+                                
+                          
+                            </tr> 
+                       <% }
+                            for(conf_presentations c : adminCPreObjs.getC_PreSearch2(search)){
+                      		  x++;%>
+                      		  <thead>
+                            <th>Sl No.</th>
+                            <th>Type</th>
+                            <th>PCN No.</th>
+                            <th>Faculty</th>
+                            <th>Department</th>
+                            <th>Title of Paper</th>
+                            <th>Conference Presentation</th>
+                            <th>Scope</th>
+                            <th>Organised by</th>
+                            <th>Venue Details for Conference </th>
+                            <th>Year</th>
+                            <th>Month of Publication</th>
+                            <th>Month of assigning pcn</th>
+                            <th>Dates</th>
+                            <th>Hyperlink</th>
+                          
+                     
+                         
+                            </thead>
+                     
+                            <tr>
+                                <td>
+                                    <%=x%>
+                                              
+                                </td>
+                                
+                                <td>
+                                    CONF. PRESENTATION
+                                              
+                                </td>
+                                
+                                <td>
+                                    <%if(c.getPcn()==null){
+                                  	  out.print("Not Assigned");
+                                    } else{
+                                  	  out.print(c.getPcn());
+                                    }%>
+                                    
+                                </td>
                                 
                                  
+                                <td>
+                                    <%=c.getName()%>
+                                </td>
+                                <td>
+                                    <%=c.getDept()%>
+                                </td>
+                                <td>
+                                    <%=c.getTitle()%>
+                                </td>
+                                <td>
+                                    <%=c.getPresentation()%>
+                                </td> 
+                                <td>
+                                    <%=c.getScope()%>
+                                </td>   
+                                 <td>
+                                    <%=c.getOrganiser()%>
+                                </td> 
+                                <td>
+                                    <%=c.getVenue()%>
+                                </td>
+                                <td>
+                                    <%=c.getYear()%>
+                                </td>
+                                <td>
+                                    <%=c.getMonth_pub()%>
+                                </td>
+                                <td>
+                                    <%if(c.getMonth_pcn()==null){
+                                  	  out.print("Not Assigned");
+                                    } else{
+                                  	  out.print(c.getMonth_pcn());
+                                    }%>
+                                </td>
+                                <td>
+                                    <%=c.getDates()%>
+                                </td> 
+                                   <td>
+                                          	<%
+						if (c.getHyperlink() == null || c.getHyperlink().equals("NA") || c.getHyperlink().equals("na")) {
+								out.print("No Link");
+							} else {
+					%> <a href='<%=c.getHyperlink()%>'>Click
+						here</a> <%
+ 	}
+ %>
+                                      </td>
+
+                           
+                                
+                                
+                                
+                          
+                            </tr> 
+                       <% }
+                            for(Patents p : adminPObjs.getPatentSearch2(search)){
+                      		  x++;%>
+                      		   <thead>
+                            <th>Sl No.</th>
+                            <th>Type</th>
+                            <th>PCN No.</th>
+                            <th>Faculty</th>
+                            <th>Department</th>
+                            <th>Title of Patent</th>
+                            <th>Scope</th>
+                            <th>Country</th>
+                            <th>Patent Application no.</th>
+                            <th>Patent Application Year</th>
+                            <th>Patent Application Date</th>
+                            <th>Patent Award Year</th>
+                            <th>Patent Award Date</th>
+                            <th>Patent No.</th>
+                        
+                     
+                         
+                            </thead>
+                            <tr>
+                                <td>
+                                    <%=x%>
+                                              
+                                </td>
+                                
+                                <td>
+                                    PATENT
+                                              
+                                </td>
+                                
+                                <td>
+                                    <%if(p.getPcn()==null){
+                                  	  out.print("Not Assigned");
+                                    } else{
+                                  	  out.print(p.getPcn());
+                                    }%>
+                                    
+                                </td>
+                                
+                                <td>
+                                    <%=p.getName()%>
+                                </td>
+                                <td>
+                                    <%=p.getDept()%>
+                                </td>
+                                <td>
+                                    <%=p.getTitle()%>
+                                </td>
+                                <td>
+                                    <%=p.getScope()%>
+                                </td> 
+                                <td>
+                                    <%=p.getCountry()%>
+                                </td>   
+                                 <td>
+                                    <%=p.getApplication_no()%>
+                                </td> 
+                                <td>
+                                    <%=p.getApplication_year()%>
+                                </td>
+                                <td>
+                                    <%=p.getApplication_date()%>
+                                </td>
+                                <td>
+                                    <%=p.getAward_year()%>
+                                </td>
+                                <td>
+                                    <%=p.getAward_date()%>
+                                </td> 
+                                <td>
+                                    <%=p.getPatent_no() %>
+                                </td>
+                          
+                                
+                          
+                            </tr> 
+                       <% }
+                            for(tech_reports t : adminTRObjs.getTechSearch2(search)){
+                      		  x++;
+                      		  %>
+                      		  
+                      		  <thead>
+                            <th>Sl No.</th>
+                            <th>Type</th>
+                            <th>PCN No.</th>
+                            <th>Faculty</th>
+                            <th>Department</th>
+                            <th>Title of Technical Report</th>
+                            <th>Year</th>
+                            <th>Month Of Publication</th>
+                            <th>Month of assigning PCN</th>
+                            <th>Date</th>
+                            <th>Remarks</th>
+                        
+                         
+                            </thead>
+                      		  
+
+                            <tr>
+                                <td>
+                                    <%=x%>
+                                              
+                                </td>
+                                
+                                <td>
+                                    TECHNICAL REPORT
+                                              
+                                </td>
+                                
+                                <td>
+                                    <%if(t.getPcn()==null){
+                                  	  out.print("Not Assigned");
+                                    } else{
+                                  	  out.print(t.getPcn());
+                                    }%>
+                                    
+                                </td>
+                                
+                                <td>
+                                    <%=t.getName()%>
+                                </td>
+                                <td>
+                                    <%=t.getDept()%>
+                                </td>
+                                <td>
+                                    <%=t.getTitle()%>
+                                </td>
+                                <td>
+                                    <%=t.getYear()%>
+                                </td> 
+                                <td>
+                                    <%=t.getMonth_pub()%>
+                                </td>
+                                <td>
+                                    <%if(t.getMonth_pcn()==null){
+                                  	  out.print("Not Assigned");
+                                    } else{
+                                  	  out.print(t.getMonth_pcn());
+                                    }%>
+                                </td>
+                                <td>
+                                    <%=t.getDate()%>
+                                </td> 
+                                <td>
+                                    <%=t.getRemarks()%>
+                                </td> 
+                          
+                                
                                  
+                            </tr> 
+                       <% }
+                            
+                            
+                            
+                            
+                            
+                            }%>
+                            
+                            </table>
                                   
-
-                            </tbody>
-
-                        </table>
-              
 </body>
 </html>

@@ -19,7 +19,15 @@ public class Journal {
 		this.revision = revision;
 	}
 
-	private String pcn,name,dept,title,journ,scope,year,month_pub,month_pcn,vol,issue,pages,ifs,swif,lfif,pay,pdon,pw,ps,pg,pi,status,username,journal_file,plag_report,comment;
+	private String pcn,name,dept,title,journ,scope,year,month_pub,month_pcn,vol,issue,pages,ifs,swif,lfif,pay,pdon,pw,ps,pg,pi,status,username,journal_file,plag_report,comment,doi;
+
+	public String getDoi() {
+		return doi;
+	}
+
+	public void setDoi(String doi) {
+		this.doi = doi;
+	}
 
 	public String getComment() {
 		return comment;

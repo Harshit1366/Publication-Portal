@@ -31,8 +31,8 @@ public class logout extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		response.setContentType("text/html");   
-		PrintWriter out=response.getWriter();
-		
+		//PrintWriter out=response.getWriter();
+		//out.close(); 
 		//request.logout();
 		
 		   //out.print("You are successfully logged out!");  
@@ -41,18 +41,27 @@ public class logout extends HttpServlet {
 	         
 //         HttpSession sess=request.getSession(false);  
 //         sess.invalidate(); 
-         
-         if (request.getSession(false).getAttribute("s_id") == null) {
-             response.sendRedirect("../");
-             return;
-         } else {
-             userObjs.deleteS_ID(request.getSession(false).getAttribute("s_id").toString());
-             request.getSession(false).invalidate();
-             response.sendRedirect("login/login.jsp");
-             
-         }
-           
-         out.close();  
+        
+		//String role= (String)request.getSession(false).getAttribute("role");
+		
+		//if(role.equals("admin") || role.equals("user")){
+		
+		
+       // request.logout();
+			 if (request.getSession(false).getAttribute("s_id") == null) {
+	             response.sendRedirect("login.jsp");
+	             return;
+	         } else {
+	             
+	        	 userObjs.deleteS_ID(request.getSession(false).getAttribute("s_id").toString());
+	             request.getSession(false).invalidate();
+	             response.sendRedirect("login.jsp");
+	             return;
+	            
+	            
+	         }
+			
+	
 	}
 
 	/**

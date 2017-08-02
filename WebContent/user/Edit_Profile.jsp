@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+    <%@page import="com.notify.notification"%>
+<%@page import="com.notify.notifObjs"%>
          <%@page import="com.user.userObjs"%>
     <%@page import="com.user.User"%>  
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -12,12 +14,51 @@
 <title>Edit your profile</title>
 </head>
 <style>
+li{
+ font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+    font-size: 16px;
+    font-weight : bold;
+
+}
+ul.dropdown-menu{
+width: 400px;
+    height: 340px;
+    overflow: scroll;
+
+}
+
+li.a{
+font-family: Verdana;
+margin-left : 10px;
+font-size : 13px;
+font-weight : normal;
+color : blue;
+/*font-style: italic;*/
+}
+
+li.dropdown-header{
+font-family: Arial;
+}
+
+
+span.label{
+ border-radius : 15px;
+ padding: 5px 10px;
+
+}
 h1{
-margin-left : 3%;
+text-align : center;
+font-family: Verdana;
+font-size : 40px;
+}
+body{
+background-image : url("../images/ncu.jpg");
+background-repeat: no-repeat;
+background-size : 1500px 1400px;
 }
 form{
-margin-left : 8%;
-width : 40%;
+margin-left : 40%;
+
 }
 input{
 text-align:center;
@@ -27,7 +68,10 @@ text-align:center;
 }
 </style>
 <body data-spy="scroll" data-target=".navbar" data-offset="50">
-
+<%  if(request.getSession().getAttribute("s_id")==null){
+            response.sendRedirect("../login.jsp");
+            return;
+        }%>
 <nav class="navbar navbar-inverse navbar-fixed-top">  
   <div class="container-fluid">  
     <div class="navbar-header">  
@@ -52,7 +96,34 @@ text-align:center;
           <li><a href="publications.jsp">PUBLICATIONS</a></li>  
           <li><a href="select.jsp">UPLOAD PUBLICATION DETAILS</a></li>  
         </ul>  
-			<ul class="nav navbar-nav navbar-right">  
+			<ul class="nav navbar-nav navbar-right">
+			<li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+     <%if(notifObjs.count_notif(name) > 0){
+        	%> <span class="label label-danger"><%=notifObjs.count_notif(name) %></span><%
+        }else{
+       } %>
+           NOTIFICATIONS <span class="glyphicon glyphicon-bell"></span></a>
+         
+        <ul class="dropdown-menu">
+        <% 
+        for(notification n : notifObjs.getNotif(name)){
+        	
+        %>
+        
+     <li class="dropdown-header">  <%=n.getDiff() %> </li>
+          <li class='a'><%=n.getNotification() %></li>
+         
+            <li class="dropdown-header">
+        
+      
+         <a href='../Delnote?id=<%=n.getId() %>&type=user'><p align='right'> <span class="glyphicon glyphicon-trash"> </span></p></a>
+       </li>
+          
+           <li class="divider"></li>
+          <%} %>
+        </ul>
+      </li>    
 			 <li><a href="Edit_Profile.jsp"> Edit Profile</a></li>
       <li><a href="Change_Password.jsp"> Change Password</a></li>  
       <li><a href="../logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>  
@@ -89,24 +160,24 @@ text-align:center;
            <form style="width:300px" method="POST" action="../edit_profile">  
 <div class="form-group">  
     <label for="name">Name </label>  
-    <br><input type="text" class="form-control" name="name" required="required" value=<%=u.getName() %>>  
-    <br>
+    <input type="text" class="form-control" name="name" required="required" value=<%=u.getName() %>>  
+    
   </div> 
  <div class="form-group">  
     <label for="desg">Designation </label>  
-    <br><input type="text" class="form-control" name="desg" required="required" value=<%=u.getDesg() %>>  <br>
+    <input type="text" class="form-control" name="desg" required="required" value=<%=u.getDesg() %>>  
   </div> 
  <div class="form-group">  
     <label for="InputEmail">Email address </label>  
-    <br><input type="email" class="form-control" name="InputEmail" required="required" value=<%=u.getEmail() %>> <br> 
+    <input type="email" class="form-control" name="InputEmail" required="required" value=<%=u.getEmail() %>> 
   </div>  
   <div class="form-group">  
     <label for="cont">Contact No. </label>  
-    <br><input type="tel" class="form-control" name="cont" required="required" value=<%=u.getContact() %>>  <br>
+    <input type="tel" class="form-control" name="cont" required="required" value=<%=u.getContact() %>>  
   </div> 
   <div class="form-group">  
     <label for="date">D.O.B. </label>  
-    <br><input type="date" class="form-control" name="dob" value=<%=u.getDob() %>>  <br>
+    <input type="date" class="form-control" name="dob" value=<%=u.getDob() %>>  
   </div> 
   <div class="bton"> <br> 
   <button type="submit" class="btn btn-primary btn-lg">Edit profile</button>  

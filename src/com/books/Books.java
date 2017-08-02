@@ -9,7 +9,11 @@ public class Books {
 	public void setHyperlink(String hyperlink) {
 		this.hyperlink = hyperlink;
 	}
+	
+	
 	private int year, id, revision;
+	
+	
 	public String getPcn() {
 		return pcn;
 	}

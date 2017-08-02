@@ -27,6 +27,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FilenameUtils;
 
 import com.user.ConnectionFactory;
+import com.user.userObjs;
 
 /**
  * Servlet implementation class uploadJournal
@@ -69,17 +70,18 @@ public class uploadJournal extends HttpServlet {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		PreparedStatement ps1 = null;
+		PreparedStatement ps1 = null, ps2 = null;
 		try {
-			ps1 = conn.prepareStatement("insert into journal (authors_name,dept,title_paper,journal,scope,year,publ_month,volume,issue,pages,impact_factor,specify_if,link_if,pay,payment_done,pw,ps,pg,pi,journal_file,plag_report,username) "
-					+ "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+			ps1 = conn.prepareStatement("insert into journal (authors_name,dept,title_paper,journal,scope,year,publ_month,volume,issue,pages,doi,impact_factor,specify_if,link_if,pay,payment_done,pw,ps,pg,pi,journal_file,plag_report,username) "
+					+ "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+			ps2 = conn.prepareStatement("insert into notify(notification,user_id) values(?,?)");
 		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		
 		File f = null;
-		int j=20;
+		int j=21;
 		PrintWriter out = response.getWriter();
 		List<String[]> formdata = new ArrayList<>();
 		try {
@@ -119,7 +121,7 @@ public class uploadJournal extends HttpServlet {
 							}
 							
 							i++;
-							if(i==20){
+							if(i==21){
 								break;
 							}
 						}
@@ -159,14 +161,26 @@ public class uploadJournal extends HttpServlet {
             name=(String)sess.getAttribute("name");  
             }
 			
-            ps1.setString(22, name);
+            ps1.setString(23, name);
 			
+            String n = userObjs.getName(name);
+            ps2.setString(1, "A Journal publication is uploaded by "+n);
+            ps2.setString(2, "admin");
 		
 		
 			
 			try{
 				//System.out.println(ps1);
-				System.out.println(ps1.executeUpdate());
+				//System.out.println(ps1.executeUpdate());
+				//System.out.println(ps2.executeUpdate());
+				if(ps1.executeUpdate()>0){
+					ps2.executeUpdate();
+				
+				out.println("<script type=\"text/javascript\">");
+				out.println("alert('JOURNAL UPLOADED SUCESSFULLY !');");
+				out.println("location='user/select.jsp';");
+				out.println("</script>");
+				}
 				response.sendRedirect("user/select.jsp");
 	
 			}catch(SQLException e){
