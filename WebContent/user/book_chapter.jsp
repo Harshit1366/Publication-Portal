@@ -369,7 +369,7 @@ to {
 
  		} else {
  			
- 			comment=userObjs.getComment(id);
+ 			comment=userObjs.getBCComment(id);
  		}
                %>
               					<div id="<%=id%>" class="modal">

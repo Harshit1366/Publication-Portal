@@ -313,9 +313,7 @@ to {
                                  if(t.getStatus() != null){
                                 	 
                                      if(t.getStatus().equals("rejected")){
-                                       	  %>
 
-<%
 						if (t.getComment() != null) {
 										int id = t.getId();
 										
@@ -342,7 +340,7 @@ to {
 
  		} else {
  			
- 			comment=userObjs.getComment(id);
+ 			comment=userObjs.getTRComment(id);
  		}
                %>
               					<div id="<%=id%>" class="modal">

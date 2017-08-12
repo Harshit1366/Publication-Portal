@@ -355,7 +355,7 @@ to {
 
  		} else {
  			
- 			comment=userObjs.getComment(id);
+ 			comment=userObjs.getJComment(id);
  		}
  %>
 					<div id="<%=id%>" class="modal">

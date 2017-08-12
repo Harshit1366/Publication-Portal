@@ -10,7 +10,7 @@ import java.sql.Types;
 
 public class userObjs {
 	
-	public static String getComment(int id) {
+	public static String getJComment(int id) {
 	
 	Connection connection = null;
 	String comment = null;
@@ -34,6 +34,161 @@ public class userObjs {
 		return comment;
 	
 	}
+	
+	
+	public static String getBComment(int id) {
+		
+		Connection connection = null;
+		String comment = null;
+
+			try {
+				connection = ConnectionFactory.getConnection();
+				PreparedStatement ps = connection.prepareStatement("select comment from books where id=?");
+				ps.setInt(1, id);
+				ResultSet rs = ps.executeQuery();
+
+				if (rs.next()) {
+					comment = rs.getString(1);
+					
+				}
+			} catch (Exception e) {
+
+			}finally{
+				ConnectionFactory.close(connection);
+			}
+			
+			return comment;
+		
+		}
+	
+	
+	public static String getBCComment(int id) {
+		
+		Connection connection = null;
+		String comment = null;
+
+			try {
+				connection = ConnectionFactory.getConnection();
+				PreparedStatement ps = connection.prepareStatement("select comment from book_chap where id=?");
+				ps.setInt(1, id);
+				ResultSet rs = ps.executeQuery();
+
+				if (rs.next()) {
+					comment = rs.getString(1);
+					
+				}
+			} catch (Exception e) {
+
+			}finally{
+				ConnectionFactory.close(connection);
+			}
+			
+			return comment;
+		
+		}
+	
+	
+	public static String getCPOComment(int id) {
+		
+		Connection connection = null;
+		String comment = null;
+
+			try {
+				connection = ConnectionFactory.getConnection();
+				PreparedStatement ps = connection.prepareStatement("select comment from conf_proceedings where id=?");
+				ps.setInt(1, id);
+				ResultSet rs = ps.executeQuery();
+
+				if (rs.next()) {
+					comment = rs.getString(1);
+					
+				}
+			} catch (Exception e) {
+
+			}finally{
+				ConnectionFactory.close(connection);
+			}
+			
+			return comment;
+		
+		}
+	
+	
+	public static String getCPEComment(int id) {
+		
+		Connection connection = null;
+		String comment = null;
+
+			try {
+				connection = ConnectionFactory.getConnection();
+				PreparedStatement ps = connection.prepareStatement("select comment from conf_presentations where id=?");
+				ps.setInt(1, id);
+				ResultSet rs = ps.executeQuery();
+
+				if (rs.next()) {
+					comment = rs.getString(1);
+					
+				}
+			} catch (Exception e) {
+
+			}finally{
+				ConnectionFactory.close(connection);
+			}
+			
+			return comment;
+		
+		}
+	
+	
+	public static String getPComment(int id) {
+		
+		Connection connection = null;
+		String comment = null;
+
+			try {
+				connection = ConnectionFactory.getConnection();
+				PreparedStatement ps = connection.prepareStatement("select comment from patents where id=?");
+				ps.setInt(1, id);
+				ResultSet rs = ps.executeQuery();
+
+				if (rs.next()) {
+					comment = rs.getString(1);
+					
+				}
+			} catch (Exception e) {
+
+			}finally{
+				ConnectionFactory.close(connection);
+			}
+			
+			return comment;
+		
+		}
+	
+	public static String getTRComment(int id) {
+		
+		Connection connection = null;
+		String comment = null;
+
+			try {
+				connection = ConnectionFactory.getConnection();
+				PreparedStatement ps = connection.prepareStatement("select comment from tech_report where id=?");
+				ps.setInt(1, id);
+				ResultSet rs = ps.executeQuery();
+
+				if (rs.next()) {
+					comment = rs.getString(1);
+					
+				}
+			} catch (Exception e) {
+
+			}finally{
+				ConnectionFactory.close(connection);
+			}
+			
+			return comment;
+		
+		}
 	
 	
 	public static String getName(String id) {

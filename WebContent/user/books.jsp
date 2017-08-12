@@ -360,7 +360,7 @@ to {
 
  		} else {
  			
- 			comment=userObjs.getComment(id);
+ 			comment=userObjs.getBComment(id);
  		}
                %>
               					<div id="<%=id%>" class="modal">
